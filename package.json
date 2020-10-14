@@ -1,0 +1,25 @@
+{
+  "name": "msmp",
+  "version": "1.0.0",
+  "description": "proposed resturant app for madam sauce kitchen",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ogmaro/msmp.git"
+  },
+  "author": "Patrick Njoli",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ogmaro/msmp/issues"
+  },
+  "homepage": "https://github.com/ogmaro/msmp#readme"
+}
