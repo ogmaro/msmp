@@ -1,0 +1,1 @@
+module.exports = 'mongodb://ogmaro:Dolphin1@msmp-shard-00-00.1p2hb.gcp.mongodb.net:27017,msmp-shard-00-01.1p2hb.gcp.mongodb.net:27017,msmp-shard-00-02.1p2hb.gcp.mongodb.net:27017/local?ssl=true&replicaSet=atlas-5qtujw-shard-0&authSource=admin&retryWrites=true&w=majority'
