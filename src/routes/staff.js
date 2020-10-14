@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router();
-const errorhandler = require('./error')
+const errorhandler = require('../../helpers/error')
 
 router.get('/', (req, res, next) => {
     res.status(200).json({

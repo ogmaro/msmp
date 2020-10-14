@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const errorHandler = require('./error')
+const errorHandler = require('../../helpers/error')
 
 //handle incoming get request for /orders
 router.get('/', (req, res, next) => {
