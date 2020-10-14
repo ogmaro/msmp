@@ -14,6 +14,7 @@ const staffRoute    = require('./src/routes/staff')
 const MONGO_URI     = require('./config')
 
 const app = express();
+app.use(express.json())
 
 app.use('/', (req, res, next) => {
     console.log('Method is ',req.method)
