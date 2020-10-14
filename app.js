@@ -1,11 +1,17 @@
 const express = require('express');
 const app = express();
+const orderRoute = require('./src/routes/order')
+const customerRoute = require('./src/routes/customer')
 
-app.use('/', (req, res, next)=>{
-    res.status(200).json({
-        msg: 'server is live'
-    });
+app.use('/', (req, res, next) => {
+    console.log('Method is ',req.method)
+    next()
 });
+
+app.use('/order', orderRoute)
+app.use('/meal', mealRoute)
+app.use('/customer', customerRoute)
+
 
 module.exports = app;
 
