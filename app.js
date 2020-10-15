@@ -8,13 +8,14 @@ const express       = require('express');
  * project dependecies
  */
 const orderRoute    = require('./src/routes/order')
-const customerRoute = require('./src/routes/customer')
+const customerRoute = require('./src/routes/user')
 const mealRoute     = require('./src/routes/meal')
 const staffRoute    = require('./src/routes/staff')
-const MONGO_URI     = require('./config')
+// const MONGO_URI     = require('./config')
 
 const app = express();
-app.use(express.json())
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/', (req, res, next) => {
     console.log('Method is ',req.method)
@@ -24,7 +25,7 @@ app.use('/', (req, res, next) => {
 /**
  * Connect MongoDB
  */
-MONGO_URI
+require('./db')();
 
 app.use('/order', orderRoute)
 app.use('/meal', mealRoute)

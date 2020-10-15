@@ -4,6 +4,7 @@
   "description": "proposed resturant app for madam sauce kitchen",
   "main": "server.js",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "g": "^2.0.1",
     "mongodb": "^3.6.2",

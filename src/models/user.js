@@ -1,7 +1,8 @@
 const mongosse =  require('mongoose');
 const Schema = mongosse.Schema;
 
-const customerSchema = new Schema({
+const userSchema = new Schema({
+    _id: mongosse.Types.ObjectId,
     firstname:  {
         type: String,
         required: true
@@ -50,3 +51,4 @@ const customerSchema = new Schema({
         dept: {type: String}
     }
 })
+module.exports = mongosse.model('User', userSchema);
