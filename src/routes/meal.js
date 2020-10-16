@@ -60,7 +60,7 @@ router.get('/', (req, res, next) => {
 });
  
 router.post('/', upload.single('mealPicture'),(req, res, next) => {
-    console.log(req.file)
+    //console.log(req.file)
     const meal = new Meal({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,

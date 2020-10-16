@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcrypt')
 const router = express.Router();
 const errorhandler = require('../../helpers/error')
 const mongoose = require('mongoose')
@@ -41,44 +42,66 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    const user = new User({
-        _id: new mongoose.Types.ObjectId(),
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        password: req.body.password,
-        emailAddress: req.body.emailAddress,
-        username: req.body.username,
-        phoneNumber: req.body.phoneNumber,
-        dateOfBirth: req.body.dateOfBirth,
-        gender: req.body.gender,
-        Address: req.body.Address
+    User.find({email: req.body.emailAddress})
+        .exec()
+        .then(user =>{
+            if(user.length >= 1){
+                return res.status(403).json('User already exsist')
+            }else{
+                bcrypt.hash(req.body.password, 10, (error, hash)=>{
+                    if(error){
+                        return res.status(500).json({
+                            error: error
+                        });
+                    }else{
+                        const user = new User({
+                            _id: new mongoose.Types.ObjectId(),
+                            firstname: req.body.firstname,
+                            lastname: req.body.lastname,
+                            password: hash,
+                            emailAddress: req.body.emailAddress,
+                            username: req.body.username,
+                            phoneNumber: req.body.phoneNumber,
+                            dateOfBirth: req.body.dateOfBirth,
+                            gender: req.body.gender,
+                            Address: req.body.Address
+                    
+                        })
+                        user.save()
+                            .then(result => {  
+                                res.status(201).json({
+                                    msg: 'user has been created', userCreated : {
+                                        ID: result._id,
+                                        name: result.lastname,
+                                        email: result.emailAddress,
+                                        password: result.password,
+                                        username: result.username,
+                                        phone: result.phoneNumber,
+                                        gender: result.gender,
+                                        Address: result.Address,
+                                        request: {
+                                            method: 'GET',
+                                            url: 'mongodb://127.0.0.1:27017/msmp_eatery/' +result._id
+                                     }   
+                                    }
+                                })                      
+                            })
+                            .catch((error)=>{
+                                console.log(error.message)
+                                res.status(500).json({
+                                    msg: "could not create user", error: error
+                                })
+                            })
+                        
+                    }
+                })
+            }
+        })
 
-    })
-    user.save()
-        .then(result => {  
-            res.status(201).json({
-                msg: 'user has been created', userCreated : {
-                    ID: result._id,
-                    name: result.lastname,
-                    email: result.emailAddress,
-                    username: result.username,
-                    phone: result.phoneNumber,
-                    gender: result.gender,
-                    Address: result.Address,
-                    request: {
-                        method: 'GET',
-                        url: 'mongodb://127.0.0.1:27017/msmp_eatery/' +result._id
-                 }   
-                }
-            })                      
-        })
-        .catch((error)=>{
-            console.log(error.message)
-            res.status(500).json({
-                msg: "could not create user", error: error
-            })
-        })
-    });
+
+    
+})
+    
 router.get('/:userID([a-zA-Z0-9]{10,})', (req, res, next) => {
     const _id = req.params.userID;
     if(!User){
