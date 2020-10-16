@@ -2,9 +2,9 @@ const mongosse =  require('mongoose');
 const Schema = mongosse.Schema;
 
 const mealSchema = new Schema({
-    _id: mongosse.Types.ObjectId,
+    _id: mongosse.Schema.Types.ObjectId,
     name:  {
-        type: String,
+        type: mongosse.Schema.Types.ObjectId
         // required: true
     },
     quantity:   {
