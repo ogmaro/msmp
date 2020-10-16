@@ -13,7 +13,7 @@ const mealRoute     = require('./src/routes/meal')
 // const MONGO_URI     = require('./config')
 
 const app = express();
-app.use(express.static())
+app.use(express.static('uploads')) 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
