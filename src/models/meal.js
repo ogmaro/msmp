@@ -10,6 +10,10 @@ const mealSchema = new Schema({
     price: {
         type: String,
         required: true
+    },
+    mealPicture: {
+        type: String,
+        require: true
     }
 })
 module.exports = mongosse.model('Meal', mealSchema);

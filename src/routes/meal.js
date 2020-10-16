@@ -29,7 +29,7 @@ const upload = multer({
 //handle incoming get request for /meals
 router.get('/', (req, res, next) => {
     Meal.find()
-        .select("name price")
+        .select("name price mealPicture")
         .exec()
         .then(results =>{
             const response = {
@@ -39,6 +39,7 @@ router.get('/', (req, res, next) => {
                         ID: result._id,
                         name: result.name,
                         price: result.price,
+                        mealPicture: result.mealPicture,
                         request: {
                             method: 'GET',
                             url: 'mongodb://127.0.0.1:27017/msmp_eatery/' +result._id
@@ -63,7 +64,8 @@ router.post('/', upload.single('mealPicture'),(req, res, next) => {
     const meal = new Meal({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        price: req.body.price
+        price: req.body.price,
+        mealPicture: req.file.path
     })
     meal.save()
         .then(result => {  
@@ -72,6 +74,7 @@ router.post('/', upload.single('mealPicture'),(req, res, next) => {
                     ID: result._id,
                     name: result.name,
                     price: result.price,
+                    mealPicture: result.mealPicture,
                     request: {
                         method: 'GET',
                         url: 'mongodb://127.0.0.1:27017/msmp_eatery/' +result._id
@@ -94,7 +97,7 @@ router.get('/:mealID([a-zA-Z0-9]{10,})', (req, res, next) => {
         })
     }
     Meal.findById({_id: _id})
-        .select("name price")
+        .select("name price mealPicture")
         .exec()
         .then(result => {
             if(result){
@@ -151,7 +154,7 @@ router.delete('/:mealID([a-zA-Z0-9]{10,})', (req, res, next) => {
     Meal.findByIdAndDelete({
         _id: _id
     })
-        .select("name, price")
+        .select("name price mealPicture")
         .exec()
         .then(result => {
             console.log(result)
