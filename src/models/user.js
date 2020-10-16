@@ -5,42 +5,39 @@ const userSchema = new Schema({
     _id: mongosse.Types.ObjectId,
     firstname:  {
         type: String,
-        required: true
+        // required: true
     },
     lastname:   {
         type: String,
-        required: true
+        //required: true
     },
     password: {
         type: String,
-        required: true
+        //required: true
     },
     emailAddress: {
-        type: [String],
-        required: true,
-        unique: true
+        type: String,
+        //required: true,
+        // unique: true
     },
     username:   {
         type: String,
-        required: true,
-        unique: true
+        // required: true,
+        // unique: true
     },
     phoneNumber: {
         type: String,
-        required: true,
-        unique: true
+        // required: true,
+        // unique: true
     },
     dateOfBirth: {
-        type: Date,
-        required: true,
-        trim: true,
+        type: String,
+        // required: true,
+        // trim: true,
     },
     gender: {
         type: String,
         enum: ["male", "female"]
-    },
-    role: {
-        type: Boolean
     },
     Address: {
         country: {type: String},

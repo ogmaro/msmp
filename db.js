@@ -3,10 +3,12 @@ const MONGO_URL = 'mongodb://127.0.0.1:27017/msmp_eatery'
 
 module.exports = () => mongoose.connect(MONGO_URL, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useCreateIndex: true
 })
     .then(() => console.log(`MongoDB connected Successful`))
     .catch(error => console.log(error.message))
+    mongoose.Promise = global.Promise;
 
     mongoose.connection.on('connected', () => {
         console.log('Mongoose connected to db...');
@@ -28,3 +30,4 @@ module.exports = () => mongoose.connect(MONGO_URL, {
           process.exit(0);
         });
       });
+  

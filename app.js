@@ -10,7 +10,6 @@ const express       = require('express');
 const orderRoute    = require('./src/routes/order')
 const customerRoute = require('./src/routes/user')
 const mealRoute     = require('./src/routes/meal')
-const staffRoute    = require('./src/routes/staff')
 // const MONGO_URI     = require('./config')
 
 const app = express();
@@ -29,8 +28,7 @@ require('./db')();
 
 app.use('/order', orderRoute)
 app.use('/meal', mealRoute)
-app.use('/customer', customerRoute)
-app.use('/admin', staffRoute)
+app.use('/user', customerRoute)
 
 
 module.exports = app;
