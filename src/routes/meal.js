@@ -7,7 +7,7 @@ const Meal = require('../models/meal')
 //handle incoming get request for /meals
 router.get('/', (req, res, next) => {
     Meal.find()
-        .select("name quantity price")
+        .select("name price")
         .exec()
         .then(results =>{
             const response = {
@@ -16,7 +16,7 @@ router.get('/', (req, res, next) => {
                     return{
                         ID: result._id,
                         name: result.name,
-                        price: result.quantity,
+                        price: result.price,
                         request: {
                             method: 'GET',
                             url: 'mongodb://127.0.0.1:27017/msmp_eatery/' +result._id
@@ -40,7 +40,6 @@ router.post('/', (req, res, next) => {
     const meal = new Meal({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        quantity: req.body.quantity,
         price: req.body.price
 
     })
@@ -50,7 +49,6 @@ router.post('/', (req, res, next) => {
                 msg: 'meal has been created', mealCreated : {
                     ID: result._id,
                     name: result.name,
-                    quantity: result.quantity,
                     price: result.price,
                     request: {
                         method: 'GET',
@@ -66,10 +64,10 @@ router.post('/', (req, res, next) => {
             })
         })
     });
-router.get('/:mealID', (req, res, next) => {
+router.get('/:mealID([a-zA-Z0-9]{10,})', (req, res, next) => {
     const _id = req.params.mealID;
     Meal.findById({_id: _id})
-        .select("name quantity price")
+        .select("name price")
         .exec()
         .then(result => {
             if(result){
@@ -94,7 +92,7 @@ router.get('/:mealID', (req, res, next) => {
         })
 });
 
-router.patch('/:mealID', (req, res, next) => {
+router.patch('/:mealID([a-zA-Z0-9]{10,})', (req, res, next) => {
     const _id = req.params.mealID;
     const updateDB = {};
     for (const db of req.body){
@@ -121,12 +119,12 @@ router.patch('/:mealID', (req, res, next) => {
 
 });
 
-router.delete('/:mealID', (req, res, next) => {
+router.delete('/:mealID([a-zA-Z0-9]{10,})', (req, res, next) => {
     const _id =  req.params.mealID;
     Meal.findByIdAndDelete({
         _id: _id
     })
-        .select("name, quantity, price")
+        .select("name, price")
         .exec()
         .then(result => {
             console.log(result)

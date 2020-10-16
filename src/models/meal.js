@@ -4,7 +4,7 @@ const Schema = mongosse.Schema;
 const mealSchema = new Schema({
     _id: mongosse.Schema.Types.ObjectId,
     name:  {
-        type: mongosse.Schema.Types.ObjectId,
+        type: String,
         required: true
     },
     price: {
