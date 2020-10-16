@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const errorhandler = require('../../helpers/error')
 const mongoose = require('mongoose')
-const meal = require('../models/meal')
+const Meal = require('../models/meal')
 
 //handle incoming get request for /meals
 router.get('/', (req, res, next) => {
-    meal.find()
+    Meal.find()
         .select("name quantity price")
         .exec()
         .then(results =>{
@@ -37,7 +37,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    const meal = new meal({
+    const meal = new Meal({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
         quantity: req.body.quantity,
@@ -49,7 +49,8 @@ router.post('/', (req, res, next) => {
             res.status(201).json({
                 msg: 'meal has been created', mealCreated : {
                     ID: result._id,
-                    name: result.quantity,
+                    name: result.name,
+                    quantity: result.quantity,
                     price: result.price,
                     request: {
                         method: 'GET',
@@ -67,7 +68,7 @@ router.post('/', (req, res, next) => {
     });
 router.get('/:mealID', (req, res, next) => {
     const _id = req.params.mealID;
-    meal.findById({_id: _id})
+    Meal.findById({_id: _id})
         .select("name quantity price")
         .exec()
         .then(result => {
@@ -99,7 +100,7 @@ router.patch('/:mealID', (req, res, next) => {
     for (const db of req.body){
         updateDB[db.newUpdate] = db.value
     };
-    meal.update({ _id: _id}, { $set: updateDB})
+    Meal.update({ _id: _id}, { $set: updateDB})
     .exec()
     .then( result => {
         console.log(result)
@@ -122,9 +123,10 @@ router.patch('/:mealID', (req, res, next) => {
 
 router.delete('/:mealID', (req, res, next) => {
     const _id =  req.params.mealID;
-    meal.findByIdAndDelete({
+    Meal.findByIdAndDelete({
         _id: _id
     })
+        .select("name, quantity, price")
         .exec()
         .then(result => {
             console.log(result)
