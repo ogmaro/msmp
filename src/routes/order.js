@@ -9,7 +9,7 @@ const Meal = require('../models/meal')
 router.get('/', (req, res, next) => {
     Order.find()
         .select("name quantity price")
-        // .populate('meal')
+        .populate('meal', 'name')
         .exec()
         .then(results =>{
             const response = {
@@ -17,7 +17,7 @@ router.get('/', (req, res, next) => {
                 orders: results.map( result =>{
                     return{
                         ID: result._id,
-                        name: result.name,
+                        name: result.meal,
                         price: result.quantity,
                         request: {
                             method: 'GET',

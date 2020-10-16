@@ -3,8 +3,8 @@ const Schema = mongosse.Schema;
 
 const orderSchema = new Schema({
     _id: mongosse.Schema.Types.ObjectId,
-    name:  {
-        type: mongosse.Schema.Types.ObjectId, ref: 'Meal'
+    meal:  {
+        type: mongosse.Schema.Types.ObjectId, ref: 'Meal', require: true
     },
     quantity: {
         type: Number,

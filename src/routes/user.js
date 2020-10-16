@@ -79,8 +79,13 @@ router.post('/', (req, res, next) => {
             })
         })
     });
-router.get('/:userID', (req, res, next) => {
+router.get('/:userID([a-zA-Z0-9]{10,})', (req, res, next) => {
     const _id = req.params.userID;
+    if(!User){
+        return res.status(404).json({
+            msg: 'User not found'
+        })
+    }
     User.findById({_id: _id})
         .select("firstname lastname password emailAddress username phoneNumber gender Address")
         .exec()
@@ -107,7 +112,7 @@ router.get('/:userID', (req, res, next) => {
         })
 });
 
-router.patch('/:userID', (req, res, next) => {
+router.patch('/:userID([a-zA-Z0-9]{10,})', (req, res, next) => {
     const _id = req.params.userID;
     const updateDB = {};
     for (const db of req.body){
@@ -134,7 +139,7 @@ router.patch('/:userID', (req, res, next) => {
 
 });
 
-router.delete('/:userID', (req, res, next) => {
+router.delete('/:userID([a-zA-Z0-9]{10,})', (req, res, next) => {
     const _id =  req.params.userID;
     User.findByIdAndDelete({
         _id: _id
