@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const errorhandler = require('../../helpers/error')
 const mongoose = require('mongoose')
 const Order = require('../models/orders')
 const Meal = require('../models/meal')
+const createError = require('http-errors');
 
 //handle incoming get request for /orders
 router.get('/', (req, res, next) => {
@@ -156,6 +156,6 @@ router.delete('/:orderID([a-zA-Z0-9]{10,})', (req, res, next) => {
         })
 });
 
-router.get('*', errorhandler)
+router.get('*', createError.NotFound)
 
 module.exports = router;

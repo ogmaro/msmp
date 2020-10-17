@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const errorhandler = require('../../helpers/error')
 const mongoose = require('mongoose')
 const Meal = require('../models/meal')
 const multer = require('multer')
-const helper = require('../../helpers/helper')
+const helper = require('../helpers/helper')
+const createError = require('http-errors')
 
 const storage = multer.diskStorage({
     destination: (req, file, cb)=> {
@@ -170,6 +170,6 @@ router.delete('/:mealID([a-zA-Z0-9]{10,})', (req, res, next) => {
         })
 });
 
-router.get('*', errorhandler)
+router.get('*', createError.NotFound)
 
 module.exports = router;
