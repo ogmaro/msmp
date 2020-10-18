@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const router = express.Router();
 const mongoose = require("mongoose");
 const User = require("../models/user");
-const jwt = require("../helpers/jwt_helper");
+const jwt = require("../helpers/jwt_helper.js");
 const createError = require("http-errors");
 
 //handle incoming get request for /users
@@ -120,13 +120,13 @@ router.post("/login", (req, res, next) => {
           });
         }
         if (result) {
-          jwt.signInToken({
-            emailAddress: user[0].emailAddress,
-          });
+          const token = jwt.signInToken(user[0].emailAddress);
+          // const foundUser = jwt.signInToken({
+          //   emailAddress: user[0].emailAddress,
+          // });
           return res.status(200).json({
             msg: "Authetication Successful",
-            name: user[0].firstname,
-            token: user[0].password,
+            token: token,
           });
         }
         res.status(401).json({
