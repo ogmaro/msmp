@@ -5,6 +5,7 @@ const Meal = require("../models/meal");
 const multer = require("multer");
 const helper = require("../helpers/helper");
 const createError = require("http-errors");
+const jwt = require("../helpers/jwt_helper");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -61,39 +62,44 @@ router.get("/", (req, res, next) => {
     });
 });
 
-router.post("/", upload.single("mealPicture"), (req, res, next) => {
-  //console.log(req.file)
-  const meal = new Meal({
-    _id: new mongoose.Types.ObjectId(),
-    name: req.body.name,
-    price: req.body.price,
-    mealPicture: req.file.path,
-  });
-  meal
-    .save()
-    .then((result) => {
-      res.status(201).json({
-        msg: "meal has been created",
-        mealCreated: {
-          ID: result._id,
-          name: result.name,
-          price: result.price,
-          mealPicture: result.mealPicture,
-          request: {
-            method: "GET",
-            url: "mongodb://127.0.0.1:27017/msmp_eatery/" + result._id,
-          },
-        },
-      });
-    })
-    .catch((error) => {
-      console.log(error.message);
-      res.status(500).json({
-        msg: "could not create meal",
-        error: error,
-      });
+router.post(
+  "/",
+  upload.single("mealPicture"),
+  jwt.verifyToken,
+  (req, res, next) => {
+    //console.log(req.file)
+    const meal = new Meal({
+      _id: new mongoose.Types.ObjectId(),
+      name: req.body.name,
+      price: req.body.price,
+      mealPicture: req.file.path,
     });
-});
+    meal
+      .save()
+      .then((result) => {
+        res.status(201).json({
+          msg: "meal has been created",
+          mealCreated: {
+            ID: result._id,
+            name: result.name,
+            price: result.price,
+            mealPicture: result.mealPicture,
+            request: {
+              method: "GET",
+              url: "mongodb://127.0.0.1:27017/msmp_eatery/" + result._id,
+            },
+          },
+        });
+      })
+      .catch((error) => {
+        console.log(error.message);
+        res.status(500).json({
+          msg: "could not create meal",
+          error: error,
+        });
+      });
+  }
+);
 router.get("/:mealID([a-zA-Z0-9]{10,})", (req, res, next) => {
   const _id = req.params.mealID;
   if (!Meal) {
