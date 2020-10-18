@@ -1,4 +1,5 @@
-const Order = require("../models/orders");
+const Order = require("../models/order");
+const Meal = require("../models/meal");
 
 exports.getAllOrder = (req, res, next) => {
   Order.find()

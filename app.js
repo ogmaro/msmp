@@ -3,7 +3,6 @@
  */
 const express = require("express");
 require("dotenv").config({ path: __dirname + "/.env" });
-// const mongoose = require('mongoose')
 
 /**
  * project dependecies
@@ -11,7 +10,6 @@ require("dotenv").config({ path: __dirname + "/.env" });
 const orderRoute = require("./src/routes/order");
 const customerRoute = require("./src/routes/user");
 const mealRoute = require("./src/routes/meal");
-// const MONGO_URI     = require('./config')
 
 const app = express();
 app.use(express.static("uploads"));
@@ -26,7 +24,7 @@ app.use("/", (req, res, next) => {
 /**
  * Connect MongoDB
  */
-require("./db")();
+require("./src/helpers/db")();
 
 app.use("/order", orderRoute);
 app.use("/meal", mealRoute);
