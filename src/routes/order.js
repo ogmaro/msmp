@@ -4,9 +4,10 @@ const mongoose = require("mongoose");
 const Order = require("../models/orders");
 const Meal = require("../models/meal");
 const createError = require("http-errors");
+const jwt = require("../helpers/jwt_helper");
 
 //handle incoming get request for /orders
-router.get("/", (req, res, next) => {
+router.get("/", jwt.verifyToken, (req, res, next) => {
   Order.find()
     .select("name quantity price")
     .populate("meal", "name")
@@ -39,7 +40,7 @@ router.get("/", (req, res, next) => {
     });
 });
 
-router.post("/", (req, res, next) => {
+router.post("/", jwt.verifyToken, (req, res, next) => {
   Meal.findById(req.body.mealID)
     .then((meal) => {
       if (!meal) {
@@ -77,7 +78,7 @@ router.post("/", (req, res, next) => {
       });
     });
 });
-router.get("/:orderID([a-zA-Z0-9]{10,})", (req, res, next) => {
+router.get("/:orderID([a-zA-Z0-9]{10,})", jwt.verifyToken, (req, res, next) => {
   const _id = req.params.orderID;
   if (!Order) {
     return res.status(404).json({
@@ -111,55 +112,63 @@ router.get("/:orderID([a-zA-Z0-9]{10,})", (req, res, next) => {
     });
 });
 
-router.patch("/:orderID([a-zA-Z0-9]{10,})", (req, res, next) => {
-  const _id = req.params.orderID;
-  const updateDB = {};
-  for (const db of req.body) {
-    updateDB[db.newUpdate] = db.value;
+router.patch(
+  "/:orderID([a-zA-Z0-9]{10,})",
+  jwt.verifyToken,
+  (req, res, next) => {
+    const _id = req.params.orderID;
+    const updateDB = {};
+    for (const db of req.body) {
+      updateDB[db.newUpdate] = db.value;
+    }
+    Order.update({ _id: _id }, { $set: updateDB })
+      .exec()
+      .then((result) => {
+        console.log(result);
+        res.status(200).json({
+          msg: "updated successful",
+          result,
+          request: {
+            method: "PATCH",
+            url: "mongodb://127.0.0.1:27017/msmp_eatery/" + _id,
+          },
+        });
+      })
+      .catch((error) => {
+        console.log(error.message);
+        res.status(500).json({
+          msg: "An error occured",
+          error: error,
+        });
+      });
   }
-  Order.update({ _id: _id }, { $set: updateDB })
-    .exec()
-    .then((result) => {
-      console.log(result);
-      res.status(200).json({
-        msg: "updated successful",
-        result,
-        request: {
-          method: "PATCH",
-          url: "mongodb://127.0.0.1:27017/msmp_eatery/" + _id,
-        },
-      });
-    })
-    .catch((error) => {
-      console.log(error.message);
-      res.status(500).json({
-        msg: "An error occured",
-        error: error,
-      });
-    });
-});
+);
 
-router.delete("/:orderID([a-zA-Z0-9]{10,})", (req, res, next) => {
-  const _id = req.params.orderID;
-  Order.findByIdAndDelete({
-    _id: _id,
-  })
-    .select("name, quantity, price")
-    .exec()
-    .then((result) => {
-      console.log(result);
-      res.status(200).json({
-        msg: "order deleted",
-        result,
-      });
+router.delete(
+  "/:orderID([a-zA-Z0-9]{10,})",
+  jwt.verifyToken,
+  (req, res, next) => {
+    const _id = req.params.orderID;
+    Order.findByIdAndDelete({
+      _id: _id,
     })
-    .catch((error) => {
-      console.log(error.messageclear);
-      res.status(500).json({
-        msg: "an error occured",
+      .select("name, quantity, price")
+      .exec()
+      .then((result) => {
+        console.log(result);
+        res.status(200).json({
+          msg: "order deleted",
+          result,
+        });
+      })
+      .catch((error) => {
+        console.log(error.messageclear);
+        res.status(500).json({
+          msg: "an error occured",
+        });
       });
-    });
-});
+  }
+);
 
 router.get("*", createError.NotFound);
 

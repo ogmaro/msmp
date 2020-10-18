@@ -135,55 +135,63 @@ router.get("/:mealID([a-zA-Z0-9]{10,})", (req, res, next) => {
     });
 });
 
-router.patch("/:mealID([a-zA-Z0-9]{10,})", (req, res, next) => {
-  const _id = req.params.mealID;
-  const updateDB = {};
-  for (const db of req.body) {
-    updateDB[db.newUpdate] = db.value;
+router.patch(
+  "/:mealID([a-zA-Z0-9]{10,})",
+  jwt.verifyToken,
+  (req, res, next) => {
+    const _id = req.params.mealID;
+    const updateDB = {};
+    for (const db of req.body) {
+      updateDB[db.newUpdate] = db.value;
+    }
+    Meal.update({ _id: _id }, { $set: updateDB })
+      .exec()
+      .then((result) => {
+        console.log(result);
+        res.status(200).json({
+          msg: "updated successful",
+          result,
+          request: {
+            method: "PATCH",
+            url: "mongodb://127.0.0.1:27017/msmp_eatery/" + _id,
+          },
+        });
+      })
+      .catch((error) => {
+        console.log(error.message);
+        res.status(500).json({
+          msg: "An error occured",
+          error: error,
+        });
+      });
   }
-  Meal.update({ _id: _id }, { $set: updateDB })
-    .exec()
-    .then((result) => {
-      console.log(result);
-      res.status(200).json({
-        msg: "updated successful",
-        result,
-        request: {
-          method: "PATCH",
-          url: "mongodb://127.0.0.1:27017/msmp_eatery/" + _id,
-        },
-      });
-    })
-    .catch((error) => {
-      console.log(error.message);
-      res.status(500).json({
-        msg: "An error occured",
-        error: error,
-      });
-    });
-});
+);
 
-router.delete("/:mealID([a-zA-Z0-9]{10,})", (req, res, next) => {
-  const _id = req.params.mealID;
-  Meal.findByIdAndDelete({
-    _id: _id,
-  })
-    .select("name price mealPicture")
-    .exec()
-    .then((result) => {
-      console.log(result);
-      res.status(200).json({
-        msg: "meal deleted",
-        result,
-      });
+router.delete(
+  "/:mealID([a-zA-Z0-9]{10,})",
+  jwt.verifyToken,
+  (req, res, next) => {
+    const _id = req.params.mealID;
+    Meal.findByIdAndDelete({
+      _id: _id,
     })
-    .catch((error) => {
-      console.log(error.messageclear);
-      res.status(500).json({
-        msg: "an error occured",
+      .select("name price mealPicture")
+      .exec()
+      .then((result) => {
+        console.log(result);
+        res.status(200).json({
+          msg: "meal deleted",
+          result,
+        });
+      })
+      .catch((error) => {
+        console.log(error.messageclear);
+        res.status(500).json({
+          msg: "an error occured",
+        });
       });
-    });
-});
+  }
+);
 
 router.get("*", createError.NotFound);
 
