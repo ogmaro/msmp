@@ -12,23 +12,11 @@ router.get("/", jwt.verifyToken, OrderController.getAllOrder);
 
 router.post("/", jwt.verifyToken, OrderController.createOrder);
 
-router.get(
-  "/:orderID([a-zA-Z0-9]{10,})",
-  jwt.verifyToken,
-  OrderController.getOrderByID
-);
+router.get("/:orderID", jwt.verifyToken, OrderController.getOrderByID);
 
-router.patch(
-  "/:orderID([a-zA-Z0-9]{10,})",
-  jwt.verifyToken,
-  OrderController.updateOrderByID
-);
+router.patch("/:orderID", jwt.verifyToken, OrderController.updateOrderByID);
 
-router.delete(
-  "/:orderID([a-zA-Z0-9]{10,})",
-  jwt.verifyToken,
-  OrderController.deleteOrderByID
-);
+router.delete("/:orderID", jwt.verifyToken, OrderController.deleteOrderByID);
 
 router.get("*", createError.NotFound);
 

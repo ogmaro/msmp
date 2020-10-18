@@ -13,11 +13,11 @@ router.get("/", UserController.getAllUsers);
 router.post("/signup", UserController.createNewUser);
 router.post("/login", UserController.logUserIn);
 
-router.get("/:userID([a-zA-Z0-9]{10,})", UserController.getUserByID);
+router.get("/:userID", UserController.getUserByID);
 
-router.patch("/:userID([a-zA-Z0-9]{10,})", UserController.updateUserByID);
+router.patch("/:userID", UserController.updateUserByID);
 
-router.delete("/:userID([a-zA-Z0-9]{10,})", UserController.deleteUserByID);
+router.delete("/:userID", UserController.deleteUserByID);
 
 router.get("*", createError.NotFound);
 

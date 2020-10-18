@@ -38,19 +38,11 @@ router.post(
   upload.single("mealPicture"),
   MealController.createNewMeal
 );
-router.get("/:mealID([a-zA-Z0-9]{10,})", MealController.getMealByID);
+router.get("/:mealID", MealController.getMealByID);
 
-router.patch(
-  "/:mealID([a-zA-Z0-9]{10,})",
-  jwt.verifyToken,
-  MealController.updateMealByID
-);
+router.patch("/:mealID", jwt.verifyToken, MealController.updateMealByID);
 
-router.delete(
-  "/:mealID([a-zA-Z0-9]{10,})",
-  jwt.verifyToken,
-  MealController.deleteMealByID
-);
+router.delete("/:mealID", jwt.verifyToken, MealController.deleteMealByID);
 
 router.get("*", createError.NotFound);
 
