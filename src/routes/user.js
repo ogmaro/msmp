@@ -105,26 +105,27 @@ router.post("/signup", (req, res, next) => {
     });
 });
 router.post("/login", (req, res, next) => {
-  User.find({ email: req.body.emailAddress })
+  User.find({ emailAddress: req.body.email })
     .exec()
     .then((user) => {
       if (user.length < 1) {
-        return res.status(400).json({
+        return res.status(401).json({
           msg: "Authetication failed",
         });
       }
       bcrypt.compare(req.body.password, user[0].password, (error, result) => {
         if (error) {
-          return res.status(403).json({
+          return res.status(401).json({
             msg: "Authetication failed",
           });
         }
         if (result) {
           jwt.signInToken({
-            email: user[0].emailAddress,
+            emailAddress: user[0].emailAddress,
           });
           return res.status(200).json({
             msg: "Authetication Successful",
+            name: user[0].firstname,
             token: user[0].password,
           });
         }
