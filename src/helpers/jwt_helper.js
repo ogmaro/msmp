@@ -18,17 +18,17 @@ access.signInToken = (emailAddress) => {
   );
 };
 access.verifyToken = (req, res, next) => {
-  jwt.verify(req.body.token, key, (error, result) => {
-    if (error) {
-      return next(
-        res.status(401).json({
-          msg: createError.Unauthorized(),
-        })
-      );
-    }
-    req.payload = result;
+  try {
+    const token = req.headers.authorization;
+    console.log(token);
+    const decoded = jwt.verify(token, key);
+    req.userData = decoded;
     next();
-  });
+  } catch (error) {
+    return res.status(401).json({
+      msg: "Authorization failed",
+    });
+  }
 };
 
 module.exports = access;

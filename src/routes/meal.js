@@ -64,8 +64,9 @@ router.get("/", (req, res, next) => {
 
 router.post(
   "/",
-  upload.single("mealPicture"),
   jwt.verifyToken,
+  upload.single("mealPicture"),
+
   (req, res, next) => {
     //console.log(req.file)
     const meal = new Meal({
