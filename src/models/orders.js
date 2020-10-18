@@ -8,7 +8,8 @@ const orderSchema = new Schema({
     },
     quantity: {
         type: Number,
-        default: 1
+        default: 1,
+        match: /^0*(\d{1,9})$/
     }
 })
 module.exports = mongosse.model('Order', orderSchema);

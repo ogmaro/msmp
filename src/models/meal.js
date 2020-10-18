@@ -5,11 +5,13 @@ const mealSchema = new Schema({
     _id: mongosse.Schema.Types.ObjectId,
     name:  {
         type: String,
-        required: true
+        required: true,
+        match: /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/
     },
     price: {
-        type: String,
-        required: true
+        type: Number,
+        required: true,
+        match: /^\d+(,\d{1,2})?$/
     },
     mealPicture: {
         type: String,
