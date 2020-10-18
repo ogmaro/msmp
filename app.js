@@ -2,6 +2,7 @@
  * node dependecies
  */
 const express = require("express");
+require("dotenv").config({ path: __dirname + "/.env" });
 // const mongoose = require('mongoose')
 
 /**
