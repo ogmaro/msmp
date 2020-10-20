@@ -134,14 +134,19 @@ exports.deleteMealByID = (req, res, next) => {
   Meal.findByIdAndDelete({
     _id: _id,
   })
-    .select("name price mealPicture")
     .exec()
     .then((result) => {
-      console.log(result);
-      res.status(200).json({
-        msg: "meal deleted",
-        result,
-      });
+      if (result) {
+        console.log(result);
+        res.status(200).json({
+          msg: "Meal deleted",
+          result,
+        });
+      } else {
+        res.status(501).json({
+          msg: "Meal not found me already have been deleted",
+        });
+      }
     })
     .catch((error) => {
       console.log(error.messageclear);

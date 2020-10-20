@@ -140,14 +140,19 @@ exports.deleteOrderByID = (req, res, next) => {
   Order.findByIdAndDelete({
     _id: _id,
   })
-    .select("name, quantity, price")
     .exec()
     .then((result) => {
-      console.log(result);
-      res.status(200).json({
-        msg: "order deleted",
-        result,
-      });
+      if (result) {
+        console.log(result);
+        res.status(200).json({
+          msg: "Order deleted",
+          result,
+        });
+      } else {
+        res.status(501).json({
+          msg: "Order not found me already have been deleted",
+        });
+      }
     })
     .catch((error) => {
       console.log(error.messageclear);

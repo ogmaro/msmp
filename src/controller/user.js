@@ -202,11 +202,17 @@ exports.deleteUserByID = (req, res, next) => {
   })
     .exec()
     .then((result) => {
-      console.log(result);
-      res.status(200).json({
-        msg: "user deleted",
-        result,
-      });
+      if (result) {
+        console.log(result);
+        res.status(200).json({
+          msg: "User deleted",
+          result,
+        });
+      } else {
+        res.status(501).json({
+          msg: "User not found me already have been deleted",
+        });
+      }
     })
     .catch((error) => {
       console.log(error.messageclear);

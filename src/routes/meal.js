@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
-const Meal = require("../models/meal");
 const multer = require("multer");
 const helper = require("../helpers/helper");
 const createError = require("http-errors");
