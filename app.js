@@ -10,6 +10,7 @@ require("dotenv").config({ path: __dirname + "/.env" });
 const orderRoute = require("./src/routes/order");
 const customerRoute = require("./src/routes/user");
 const mealRoute = require("./src/routes/meal");
+const createError = require("./src/helpers/errorHelper");
 
 const app = express();
 app.use(express.static("uploads"));
@@ -30,4 +31,5 @@ app.use("/order", orderRoute);
 app.use("/meal", mealRoute);
 app.use("/user", customerRoute);
 
+app.use("*", createError.notFound);
 module.exports = app;
