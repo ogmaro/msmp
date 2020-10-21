@@ -32,7 +32,7 @@ router.get("/", MealController.getAllMeal);
 
 router.post(
   "/",
-  jwt.verifyToken,
+  // jwt.verifyToken,
   upload.single("mealPicture"),
   MealController.createNewMeal
 );

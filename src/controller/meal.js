@@ -1,4 +1,6 @@
 const Meal = require("../models/meal");
+const mongoose = require("mongoose");
+const createError = require("../helpers/errorHelper");
 
 exports.getAllMeal = (req, res, next) => {
   Meal.find()
@@ -69,11 +71,6 @@ exports.createNewMeal = (req, res, next) => {
 
 exports.getMealByID = (req, res, next) => {
   const _id = req.params.mealID;
-  if (!Meal) {
-    return res.status(404).json({
-      msg: "Meal not found",
-    });
-  }
   Meal.findById({ _id: _id })
     .select("name price mealPicture")
     .exec()
@@ -93,12 +90,7 @@ exports.getMealByID = (req, res, next) => {
         });
       }
     })
-    .catch((error) => {
-      res.status(500).json({
-        msg: "error occur",
-      });
-      console.log(error.message);
-    });
+    .catch(createError.InternalServerError);
 };
 
 exports.updateMealByID = (req, res, next) => {
