@@ -1,5 +1,7 @@
 const Order = require("../models/order");
 const Meal = require("../models/meal");
+const mongoose = require("mongoose");
+const createError = require("http-errors");
 
 exports.getAllOrder = (req, res, next) => {
   Order.find()
@@ -27,10 +29,7 @@ exports.getAllOrder = (req, res, next) => {
       });
     })
     .catch((error) => {
-      console.log(error.message);
-      res.status(500).json({
-        res: " An error occur",
-      });
+      next(error);
     });
 };
 
@@ -38,9 +37,7 @@ exports.createOrder = (req, res, next) => {
   Meal.findById(req.body.mealID)
     .then((meal) => {
       if (!meal) {
-        return res.status(404).json({
-          msg: "Meal not found",
-        });
+        throw createError(500, "Meal Still Available");
       }
       const order = new Order({
         _id: new mongoose.Types.ObjectId(),
@@ -65,20 +62,14 @@ exports.createOrder = (req, res, next) => {
       });
     })
     .catch((error) => {
-      console.log(error.message);
-      res.status(500).json({
-        msg: "could not create order",
-        error: error,
-      });
+      next(error);
     });
 };
 
 exports.getOrderByID = (req, res, next) => {
   const _id = req.params.orderID;
   if (!Order) {
-    return res.status(404).json({
-      msg: "Order not found",
-    });
+    throw createError(404, "Order not found");
   }
   Order.findById({ _id: _id })
     .select("name quantity price")
@@ -100,10 +91,11 @@ exports.getOrderByID = (req, res, next) => {
       }
     })
     .catch((error) => {
-      res.status(500).json({
-        msg: "error occur",
-      });
-      console.log(error.message);
+      if (error instanceof mongoose.CastError) {
+        next(createError(400, "Invalid Order ID"));
+        return;
+      }
+      next(error);
     });
 };
 
@@ -127,11 +119,11 @@ exports.updateOrderByID = (req, res, next) => {
       });
     })
     .catch((error) => {
-      console.log(error.message);
-      res.status(500).json({
-        msg: "An error occured",
-        error: error,
-      });
+      if (error instanceof mongoose.CastError) {
+        next(createError(400, "Invalid Order ID"));
+        return;
+      }
+      next(error);
     });
 };
 
@@ -155,9 +147,10 @@ exports.deleteOrderByID = (req, res, next) => {
       }
     })
     .catch((error) => {
-      console.log(error.messageclear);
-      res.status(500).json({
-        msg: "an error occured",
-      });
+      if (error instanceof mongoose.CastError) {
+        next(createError(400, "Invalid Order ID"));
+        return;
+      }
+      next(error);
     });
 };

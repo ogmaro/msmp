@@ -1,6 +1,6 @@
 const Meal = require("../models/meal");
 const mongoose = require("mongoose");
-const createError = require("../helpers/errorHelper");
+const createError = require("http-errors");
 
 exports.getAllMeal = (req, res, next) => {
   Meal.find()
@@ -28,10 +28,7 @@ exports.getAllMeal = (req, res, next) => {
       });
     })
     .catch((error) => {
-      console.log(error.message);
-      res.status(500).json({
-        res: " An error occur",
-      });
+      next(error);
     });
 };
 
@@ -61,11 +58,7 @@ exports.createNewMeal = (req, res, next) => {
       });
     })
     .catch((error) => {
-      console.log(error.message);
-      res.status(500).json({
-        msg: "could not create meal",
-        error: error,
-      });
+      next(error);
     });
 };
 
@@ -85,12 +78,16 @@ exports.getMealByID = (req, res, next) => {
           },
         });
       } else {
-        res.status(404).json({
-          msg: "meal not found",
-        });
+        throw createError(404, "Meal not found");
       }
     })
-    .catch(createError.InternalServerError);
+    .catch((error) => {
+      if (error instanceof mongoose.CastError) {
+        next(createError(400, "Invalid Meal ID"));
+        return;
+      }
+      next(error);
+    });
 };
 
 exports.updateMealByID = (req, res, next) => {
@@ -113,11 +110,11 @@ exports.updateMealByID = (req, res, next) => {
       });
     })
     .catch((error) => {
-      console.log(error.message);
-      res.status(500).json({
-        msg: "An error occured",
-        error: error,
-      });
+      if (error instanceof mongoose.CastError) {
+        next(createError(400, "Invalid Meal ID"));
+        return;
+      }
+      next(error);
     });
 };
 
@@ -135,15 +132,14 @@ exports.deleteMealByID = (req, res, next) => {
           result,
         });
       } else {
-        res.status(501).json({
-          msg: "Meal not found me already have been deleted",
-        });
+        throw createError(404, "Id not found");
       }
     })
     .catch((error) => {
-      console.log(error.messageclear);
-      res.status(500).json({
-        msg: "an error occured",
-      });
+      if (error instanceof mongoose.CastError) {
+        next(createError(400, "Invalid Meal ID"));
+        return;
+      }
+      next(error);
     });
 };

@@ -1,9 +1,5 @@
 const express = require("express");
-const bcrypt = require("bcrypt");
 const router = express.Router();
-const mongoose = require("mongoose");
-const User = require("../models/user");
-const jwt = require("../helpers/jwt_helper.js");
 const createError = require("http-errors");
 const UserController = require("../controller/user");
 
