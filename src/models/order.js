@@ -1,11 +1,11 @@
-const mongosse = require("mongoose");
+const mongosse = require('mongoose');
 const Schema = mongosse.Schema;
 
 const orderSchema = new Schema({
   _id: mongosse.Schema.Types.ObjectId,
   meal: {
     type: mongosse.Schema.Types.ObjectId,
-    ref: "Meal",
+    ref: 'Meal',
     require: true,
   },
   quantity: {
@@ -14,4 +14,4 @@ const orderSchema = new Schema({
     match: /^0*(\d{1,9})$/,
   },
 });
-module.exports = mongosse.model("Order", orderSchema);
+module.exports = mongosse.model('Order', orderSchema);

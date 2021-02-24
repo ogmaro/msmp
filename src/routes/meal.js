@@ -1,21 +1,21 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const multer = require("multer");
-const helper = require("../helpers/helper");
-const createError = require("http-errors");
-const jwt = require("../helpers/jwt_helper");
-const MealController = require("../controller/meal");
+const multer = require('multer');
+const helper = require('../helpers/helper');
+const createError = require('http-errors');
+const jwt = require('../helpers/jwt_helper');
+const MealController = require('../controller/meal');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
     cb(null, helper.randomN0Gen(100000) + file.originalname);
   },
 });
 const fileFilter = (req, file, cb) => {
-  return file.mimetype === "image/jpeg" || file.mimetype === "image/png"
+  return file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'
     ? cb(null, true)
     : cb(null, false);
 };
@@ -28,20 +28,20 @@ const upload = multer({
 });
 
 //handle incoming get request for /meals
-router.get("/", MealController.getAllMeal);
+router.get('/', MealController.getAllMeal);
 
 router.post(
-  "/",
+  '/',
   jwt.verifyToken,
-  upload.single("mealPicture"),
+  upload.single('mealPicture'),
   MealController.createNewMeal
 );
-router.get("/:mealID", MealController.getMealByID);
+router.get('/:mealID', MealController.getMealByID);
 
-router.patch("/:mealID", jwt.verifyToken, MealController.updateMealByID);
+router.patch('/:mealID', jwt.verifyToken, MealController.updateMealByID);
 
-router.delete("/:mealID", jwt.verifyToken, MealController.deleteMealByID);
+router.delete('/:mealID', jwt.verifyToken, MealController.deleteMealByID);
 
-router.get("*", createError.NotFound);
+router.get('*', createError.NotFound);
 
 module.exports = router;

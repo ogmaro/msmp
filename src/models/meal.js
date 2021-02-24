@@ -1,4 +1,4 @@
-const mongosse = require("mongoose");
+const mongosse = require('mongoose');
 const Schema = mongosse.Schema;
 
 const mealSchema = new Schema({
@@ -18,4 +18,4 @@ const mealSchema = new Schema({
     require: true,
   },
 });
-module.exports = mongosse.model("Meal", mealSchema);
+module.exports = mongosse.model('Meal', mealSchema);

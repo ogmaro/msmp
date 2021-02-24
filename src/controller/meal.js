@@ -1,10 +1,10 @@
-const Meal = require("../models/meal");
-const mongoose = require("mongoose");
-const createError = require("http-errors");
+const Meal = require('../models/meal');
+const mongoose = require('mongoose');
+const createError = require('http-errors');
 
 exports.getAllMeal = (req, res, next) => {
   Meal.find()
-    .select("name price mealPicture")
+    .select('name price mealPicture')
     .exec()
     .then((results) => {
       const response = {
@@ -16,14 +16,14 @@ exports.getAllMeal = (req, res, next) => {
             price: result.price,
             mealPicture: result.mealPicture,
             request: {
-              method: "GET",
-              url: "mongodb://127.0.0.1:27017/msmp_eatery/" + result._id,
+              method: 'GET',
+              url: 'mongodb://127.0.0.1:27017/msmp_eatery/' + result._id,
             },
           };
         }),
       };
       res.status(200).json({
-        msg: "display all data",
+        msg: 'display all data',
         response,
       });
     })
@@ -44,15 +44,15 @@ exports.createNewMeal = (req, res, next) => {
     .save()
     .then((result) => {
       res.status(201).json({
-        msg: "meal has been created",
+        msg: 'meal has been created',
         mealCreated: {
           ID: result._id,
           name: result.name,
           price: result.price,
           mealPicture: result.mealPicture,
           request: {
-            method: "GET",
-            url: "mongodb://127.0.0.1:27017/msmp_eatery/" + result._id,
+            method: 'GET',
+            url: 'mongodb://127.0.0.1:27017/msmp_eatery/' + result._id,
           },
         },
       });
@@ -65,25 +65,25 @@ exports.createNewMeal = (req, res, next) => {
 exports.getMealByID = (req, res, next) => {
   const _id = req.params.mealID;
   Meal.findById({ _id: _id })
-    .select("name price mealPicture")
+    .select('name price mealPicture')
     .exec()
     .then((result) => {
       if (result) {
         res.status(200).json({
-          msg: "recieved data",
+          msg: 'recieved data',
           result: result,
           request: {
-            method: "GET",
-            url: "mongodb://127.0.0.1:27017/msmp_eatery/" + _id,
+            method: 'GET',
+            url: 'mongodb://127.0.0.1:27017/msmp_eatery/' + _id,
           },
         });
       } else {
-        throw createError(404, "Meal not found");
+        throw createError(404, 'Meal not found');
       }
     })
     .catch((error) => {
       if (error instanceof mongoose.CastError) {
-        next(createError(400, "Invalid Meal ID"));
+        next(createError(400, 'Invalid Meal ID'));
         return;
       }
       next(error);
@@ -101,17 +101,17 @@ exports.updateMealByID = (req, res, next) => {
     .then((result) => {
       console.log(result);
       res.status(200).json({
-        msg: "updated successful",
+        msg: 'updated successful',
         result,
         request: {
-          method: "PATCH",
-          url: "mongodb://127.0.0.1:27017/msmp_eatery/" + _id,
+          method: 'PATCH',
+          url: 'mongodb://127.0.0.1:27017/msmp_eatery/' + _id,
         },
       });
     })
     .catch((error) => {
       if (error instanceof mongoose.CastError) {
-        next(createError(400, "Invalid Meal ID"));
+        next(createError(400, 'Invalid Meal ID'));
         return;
       }
       next(error);
@@ -128,16 +128,16 @@ exports.deleteMealByID = (req, res, next) => {
       if (result) {
         console.log(result);
         res.status(200).json({
-          msg: "Meal deleted",
+          msg: 'Meal deleted',
           result,
         });
       } else {
-        throw createError(404, "Id not found");
+        throw createError(404, 'Id not found');
       }
     })
     .catch((error) => {
       if (error instanceof mongoose.CastError) {
-        next(createError(400, "Invalid Meal ID"));
+        next(createError(400, 'Invalid Meal ID'));
         return;
       }
       next(error);

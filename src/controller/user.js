@@ -1,18 +1,18 @@
-const User = require("../models/user");
-const mongoose = require("mongoose");
-const createError = require("http-errors");
-const bcrypt = require("bcrypt");
+const User = require('../models/user');
+const mongoose = require('mongoose');
+const createError = require('http-errors');
+const bcrypt = require('bcrypt');
 
 exports.createNewUser = (req, res, next) => {
   User.find({ emailAddress: req.body.emailAddress })
     .exec()
     .then((user) => {
       if (user.length >= 1) {
-        throw createError(403, "User may already exist");
+        throw createError(403, 'User may already exist');
       } else {
         bcrypt.hash(req.body.password, 10, (error, hash) => {
           if (error) {
-            throw createError(500, "Authetication failed");
+            throw createError(500, 'Authetication failed');
           } else {
             const user = new User({
               _id: new mongoose.Types.ObjectId(),
@@ -31,7 +31,7 @@ exports.createNewUser = (req, res, next) => {
               .save()
               .then((result) => {
                 res.status(201).json({
-                  msg: "user has been created",
+                  msg: 'user has been created',
                   userCreated: {
                     ID: result._id,
                     name: result.lastname,
@@ -42,15 +42,15 @@ exports.createNewUser = (req, res, next) => {
                     gender: result.gender,
                     Address: result.Address,
                     request: {
-                      method: "GET",
+                      method: 'GET',
                       url:
-                        "mongodb://127.0.0.1:27017/msmp_eatery/" + result._id,
+                        'mongodb://127.0.0.1:27017/msmp_eatery/' + result._id,
                     },
                   },
                 });
               })
               .catch((error) => {
-                if (error.name === "ValidationError") {
+                if (error.name === 'ValidationError') {
                   throw next(createError(422, error.message));
                 }
                 next(error);
@@ -67,7 +67,7 @@ exports.createNewUser = (req, res, next) => {
 exports.getAllUsers = (req, res, next) => {
   User.find()
     .select(
-      "firstname lastname password emailAddress username phoneNumber gender Address"
+      'firstname lastname password emailAddress username phoneNumber gender Address'
     )
     .exec()
     .then((results) => {
@@ -83,20 +83,20 @@ exports.getAllUsers = (req, res, next) => {
             gender: `${result.gender}`,
             Address: `${res.Address}`,
             request: {
-              method: "GET",
-              url: "mongodb://127.0.0.1:27017/msmp_eatery/" + result._id,
+              method: 'GET',
+              url: 'mongodb://127.0.0.1:27017/msmp_eatery/' + result._id,
             },
           };
         }),
       };
       res.status(200).json({
-        msg: "display all data",
+        msg: 'display all data',
         response,
       });
     })
     .catch((error) => {
       if (error instanceof mongoose.CastError) {
-        next(createError(400, "Invalid User ID"));
+        next(createError(400, 'Invalid User ID'));
         return;
       }
       next(error);
@@ -109,30 +109,30 @@ exports.logUserIn = (req, res, next) => {
     .then((user) => {
       if (user.length < 1) {
         return res.status(401).json({
-          msg: "Authetication failed",
+          msg: 'Authetication failed',
         });
       }
       bcrypt.compare(req.body.password, user[0].password, (error, result) => {
         if (error) {
           return res.status(401).json({
-            msg: "Authetication failed",
+            msg: 'Authetication failed',
           });
         }
         if (result) {
           const token = jwt.signInToken(user[0].emailAddress);
           return res.status(200).json({
-            msg: "Authetication Successful",
+            msg: 'Authetication Successful',
             token: token,
           });
         }
         res.status(401).json({
-          msg: "Authetication failed",
+          msg: 'Authetication failed',
         });
       });
     })
     .catch(
       res.status(500).json({
-        msg: "Bad request",
+        msg: 'Bad request',
       })
     );
 };
@@ -140,32 +140,32 @@ exports.logUserIn = (req, res, next) => {
 exports.getUserByID = (req, res, next) => {
   const _id = req.params.userID;
   if (!User) {
-    throw createError(500, "User already exsist");
+    throw createError(500, 'User already exsist');
   }
   User.findById({ _id: _id })
     .select(
-      "firstname lastname password emailAddress username phoneNumber gender Address"
+      'firstname lastname password emailAddress username phoneNumber gender Address'
     )
     .exec()
     .then((result) => {
       if (result) {
         res.status(200).json({
-          msg: "recieved data",
+          msg: 'recieved data',
           result: result,
           request: {
-            method: "GET",
-            url: "mongodb://127.0.0.1:27017/msmp_eatery/" + _id,
+            method: 'GET',
+            url: 'mongodb://127.0.0.1:27017/msmp_eatery/' + _id,
           },
         });
       } else {
         res.status(404).json({
-          msg: "user not found",
+          msg: 'user not found',
         });
       }
     })
     .catch((error) => {
       if (error instanceof mongoose.CastError) {
-        next(createError(400, "Invalid User ID"));
+        next(createError(400, 'Invalid User ID'));
         return;
       }
       next(error);
@@ -183,17 +183,17 @@ exports.updateUserByID = (req, res, next) => {
     .then((result) => {
       console.log(result);
       res.status(200).json({
-        msg: "updated successful",
+        msg: 'updated successful',
         result,
         request: {
-          method: "PATCH",
-          url: "mongodb://127.0.0.1:27017/msmp_eatery/" + _id,
+          method: 'PATCH',
+          url: 'mongodb://127.0.0.1:27017/msmp_eatery/' + _id,
         },
       });
     })
     .catch((error) => {
       if (error instanceof mongoose.CastError) {
-        next(createError(400, "Invalid User ID"));
+        next(createError(400, 'Invalid User ID'));
         return;
       }
       next(error);
@@ -210,16 +210,16 @@ exports.deleteUserByID = (req, res, next) => {
       if (result) {
         console.log(result);
         res.status(200).json({
-          msg: "User deleted",
+          msg: 'User deleted',
           result,
         });
       } else {
-        throw createError(404, "User not found");
+        throw createError(404, 'User not found');
       }
     })
     .catch((error) => {
       if (error instanceof mongoose.CastError) {
-        next(createError(400, "Invalid User ID"));
+        next(createError(400, 'Invalid User ID'));
         return;
       }
       next(error);

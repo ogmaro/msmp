@@ -1,4 +1,4 @@
-const mongosse = require("mongoose");
+const mongosse = require('mongoose');
 const Schema = mongosse.Schema;
 
 const userSchema = new Schema({
@@ -41,7 +41,7 @@ const userSchema = new Schema({
   },
   gender: {
     type: String,
-    enum: ["male", "female"],
+    enum: ['male', 'female'],
     match: /^(?:m|M|male|Male|f|F|female|Female)$/,
   },
   Address: {
@@ -49,4 +49,4 @@ const userSchema = new Schema({
     match: /^^(No) [\d]+, ?[\w ]+, ?[a-z]+, ?[a-zA-Z]+\.$/i,
   },
 });
-module.exports = mongosse.model("User", userSchema);
+module.exports = mongosse.model('User', userSchema);
