@@ -20,8 +20,9 @@
     "supertest": "^5.0.0"
   },
   "scripts": {
-    "start": "nodemon server",
-    "test": "jest --watch"
+    "start": "node -r dotenv/config server.js",
+    "dev": "nodemon -r dotenv/config server.js dotenv_config_path=./.env.dev",
+    "test": "jest"
   },
   "jest": {
     "testEnviroment": "node",
